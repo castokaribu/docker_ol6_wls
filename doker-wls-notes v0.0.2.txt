@@ -1,0 +1,152 @@
+======================================================
+==================  DOCKER  WLS ======================
+======================================================
+
+===================== RESOURCES ======================
+JRockit
+http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-jrockit-2192437.html
+-----
+JRE/JDK 6
+http://www.oracle.com/technetwork/java/javase/downloads/java-archive-downloads-javase6-419409.html
+-----
+WLS (Generic)
+http://www.oracle.com/technetwork/middleware/weblogic/downloads/wls-main-097127.html
+-----
+WLS Instalation
+https://oracle-base.com/articles/11g/oracle-weblogic-server-11gr1-1036-installation-on-oracle-linux-5-and-6-11gr1
+https://blogs.oracle.com/WeblogicConfigurations/entry/how_to_install_oracle_weblogic2
+-----
+
+==================== SILENT INSTALLS ==================
+http://docs.oracle.com/cd/E15289_01/doc.40/e15065/silent.htm
+https://oracle-base.com/articles/web/wlst-create-domain
+https://docs.oracle.com/cd/E12839_01/web.1111/e13715/toc.htm
+=======================================================
+
+---- Colocar instaladores en la carpeta actual
+
+#docker run -t -i --name ol6_wls1036 -i -p 7001:7001 -p 7003:7003 -p 8080:8080 -v $(pwd):/installers oraclelinux:6 /bin/bash
+#docker start -i ol6_wls1036
+
+##yum update
+
+##yum install -y nano
+
+##cd /installers
+##chmod +x jrockit-jdk1.6.0_45-R28.2.7-4.1.0-linux-x64.bin
+
+##./jrockit-jdk1.6.0_45-R28.2.7-4.1.0-linux-x64.bin
+
+Se puede usar el estandar JDK que es mejor para ambiente de desarrollo.
+================ INSTALL JRockit - JDK ================
+
+------------------>
+Choose Product Installation Directory:
+--------------------------------------
+/usr/lib/jvm/jrockit-jdk1.6.0_45-R28.2.7-4.1.0
+
+---------------->
+Optional Components 1
+Do you want to install Demos and Samples?
+    1 - Yes, install Demos and Samples.
+  ->2 - No, do not install.
+Enter a number or [Exit][Previous][Next]> 2
+
+---------------->
+Optional Components 2
+Do you want to install Source Code?
+    1 - Yes, install Source Code.
+  ->2 - No, do not install.
+Enter a number or [Exit][Previous][Next]> 2
+
+======================================================
+================ OPCIONAL ============================
+##/usr/sbin/alternatives --install /usr/bin/java java /usr/lib/jvm/jrockit-jdk1.6.0_45-R28.2.7-4.1.0/bin/java 1
+##/usr/sbin/alternatives --install /usr/bin/javac javac /usr/lib/jvm/jrockit-jdk1.6.0_45-R28.2.7-4.1.0/bin/javac 1
+
+##java -version && javac -version
+
+
+##JAVA_HOME=/usr/lib/jvm/jrockit-jdk1.6.0_45-R28.2.7-4.1.0/
+##export JAVA_HOME
+
+=================================================
+================= INSTALL WLS ===================
+##java -d64 -jar wls1036_generic.jar -mode=console
+
+---------------->
+Choose Middleware Home Directory:
+/u01/app/oracle/middleware
+
+---------------->
+Register for Security Updates:
+	3
+	No
+	Yes
+
+---------------->
+Choose Install Type:
+	2
+
+---------------->
+Choose Products and Components:
+	1
+
+---------------->
+JDK Selection (Any * indicates Oracle Supplied VM):
+	1
+
+================= WLS BASE DOMAIN CREATE ================
+##export CONFIG_JVM_ARGS=-Djava.security.egd=file:/dev/./urandom
+##sh /u01/app/oracle/middleware/wlserver_10.3/common/bin/config.sh -mode=console
+
+================= WLS BASE DOMAIN SERVICE ==================
+##nano /etc/init.d/wlsbasedom
+##chmod +x /etc/init.d/wlsbasedom
+##chkconfig --add wlsbasedom
+##chkconfig --list
+
+##service wlsbasedom start
+#--- OR
+##sh /u01/app/oracle/middleware/user_projects/domains/base_domain/bin/startWebLogic.sh &
+
+WLS Console:    http://localhost:7001/console/
+WSDL Testing:   http://localhost:7001/wls_utc/
+
+================= [OPTIONAL] NODEMANAGER SERVICE ==================
+##cd /u01/app/oracle/middleware/
+
+##find . -name nodemanager.properties
+##find . -name startN*.sh
+
+##sh /u01/app/oracle/middleware/wlserver_10.3/server/bin/startNodeManager.sh &
+
+##find . -name nodemanager.properties
+##nano wlserver_10.3/common/nodemanager/nodemanager.properties
+    -- CrashRecoveryEnabled=false
+    ++ CrashRecoveryEnabled=true
+    -- StartScriptEnabled=false
+    ++ StartScriptEnabled=true
+
+--------------
+
+##nano /etc/init.d/nodemgr
+##chmod +x /etc/init.d/nodemgr
+##chkconfig --add nodemgr
+##chkconfig --list
+##service nodemgr restart
+=============================================
+
+##exit
+
+
+
+======================================
+#docker stop ol6_wls1036
+
+#docker commit -a "Casto Colina <casto.colina@karibu.cl>" -m "create" ol6_wls1036 castokaribu/ol6_wls1036:0.0.1
+#docker run -t -i --name ol6_wls1036 -p 7001:7001 -p 7003:7003 -p 8080:8080 castokaribu/ol6_wls1036:0.0.1 /bin/bash
+
+##./u01/app/oracle/middleware/user_projects/domains/base_domain/startWebLogic.sh &
+##sh /u01/app/oracle/middleware/user_projects/domains/base_domain/bin/startWebLogic.sh &
+

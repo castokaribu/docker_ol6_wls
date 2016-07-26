@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <bea-installer> 
+     <input-fields>
+       <data-value name="BEAHOME" value="/u01/app/oracle/middleware/" />
+       <data-value name="WLS_INSTALL_DIR" value="/u01/app/oracle/middleware/wlserver_10.3/" />
+       <data-value name="STATIC_JAVA_HOME" value="/usr/lib/jvm/jrockit-jdk1.6.0_45-R28.2.7-4.1.0/" />
+       <!--<data-value name="COMPONENT_PATHS"
+        value="WebLogic Server/Core Application Server|WebLogic Server
+/Administration Console|WebLogic Server/Configuration Wizard and Upgrade 
+Framework|WebLogic Server/Web 2.0 HTTP Pub-Sub Server|WebLogic Server/WebLogic 
+JDBC Drivers|WebLogic Server/Third Party JDBC Drivers|WebLogic Server
+/WebLogic Server Clients|WebLogic Server/WebLogic Web Server Plugins
+|WebLogic Server/UDDI and Xquery Support|WebLogic Server/Server Examples|Oracle Coherence/Coherence Product Files" />-->
+      <data-value name="COMPONENT_PATHS"
+        value="WebLogic Server/Core Application Server|WebLogic Server/Administration Console|WebLogic Server/Configuration Wizard and Upgrade Framework|WebLogic Server/Web 2.0 HTTP Pub-Sub Server|WebLogic Server/WebLogic JDBC Drivers|WebLogic Server/Third Party JDBC Drivers|WebLogic Server/WebLogic Server Clients|WebLogic Server/WebLogic Web Server Plugins|WebLogic Server/UDDI and Xquery Support|Oracle Coherence/Coherence Product Files" />
+       <data-value name="INSTALL_NODE_MANAGER_SERVICE" value="yes" />
+       <data-value name="NODEMGR_PORT" value="5556" />
+       <data-value name="INSTALL_SHORTCUT_IN_ALL_USERS_FOLDER" value="false"/>
+   </input-fields> 
+</bea-installer>
